@@ -224,7 +224,7 @@ ui->listWidget->addItems(list);
 
 stacked Widget 页面的切换需要自己实现，一般使用按钮点击的时候切换
 
-​	setCurrentIndex方式切换到第几页，序号从0开始
+​	setCurrentIndex方式切换到第几页，序号从0开始 
 
 Frame：形式和普通没啥区别，但是可以设置显示效果
 
