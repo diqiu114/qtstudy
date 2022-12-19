@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "QMenuBar"
 #include "QToolBar"
-
+#include "QStatusBar"
+#include "QLabel"
+#include "QTextEdit"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,7 +46,14 @@ MainWindow::MainWindow(QWidget *parent)
     // 状态栏，只有一个
     // 获取窗口的状态栏
     QStatusBar *Sb = this->statusBar();
-
+    // 添加左侧信息
+    QLabel *LabelLeft = new QLabel("左侧信息", this);
+    QLabel *LabelRight = new QLabel("右侧信息", this);
+    Sb->addWidget(LabelLeft);
+    Sb->addPermanentWidget(LabelRight);
+    // 添加核心部件
+    QTextEdit *TextEdit = new QTextEdit(this);
+    this->setCentralWidget(TextEdit);
 
 }
 
