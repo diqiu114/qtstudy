@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ship.png</file>
+        <file>down-arrow.gif</file>
+    </qresource>
+</RCC>

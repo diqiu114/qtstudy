@@ -1,11 +1,16 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include <QMovie>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    // 使用label播放gif
+    QMovie *movie = new QMovie(":/down-arrow.gif", QByteArray(), this);
+    ui->label_2->setMovie(movie);
+    movie->start();
 }
 
 Widget::~Widget()

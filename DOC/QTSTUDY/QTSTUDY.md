@@ -8,9 +8,7 @@ Qwidget 基础窗口类：所有窗口，或者控件的父类，QApplication\QD
 
 main：
 
-​	![image-20221216110419775](C:\Users\DACHI\AppData\Roaming\Typora\typora-user-images\image-20221216110419775.png)
-
-
+![image-20221216110527966](QTSTUDY.assets/image-20221216110527966-16714339729281.png)
 
 表示窗口的一般都会继承自QObject  
 
@@ -112,3 +110,247 @@ connect(pBnt, &QPushButton::clicked, [=]() {
 ```
 
 总结：信号和槽：去网上找。。。。。 
+
+ui文件使用
+
+1. 右上角对象树：
+   1. 对象的归属
+2. 右下角的属性和值：
+   1. 继承关系
+3. 在MainWindow中需要在ui->setupUi(this)也就是ui文件的初始化
+4. 后续若需要使用ui里边的对象，直接使用ui->对象名 来获取窗口指针
+
+资源文件使用：
+
+1. 添加前缀，方便去管理资源
+
+
+
+对话框:没有最大化，最小化的窗口
+
+
+
+模态对话框 
+
+QDialog
+
+.exec()：消息循环，模态对话框
+
+.show()：立即展示，非模态对话框
+
+
+
+系统标准对话框：
+
+QMessageBox 用来提示用户某条信息，分为以下几个级别，都可以通过QMessageBox::函数名的方式来调用，产生**模态**的对话框，若不想是模态：new+show  
+
+1. info
+2. warning
+3. critical
+4. question:可以获取用户获取了哪个对话框
+
+ 
+
+
+
+标准文件对话框:QFileDialog
+
+1. 使用QFileDialog打开一个文件对话框
+
+2. 常用函数：
+
+   1. getOpenFileName：打开的单一文件
+
+      1. 可以指定文件默认路径
+
+      2. 可以指定指定文件过滤器，格式：类型名称 （ *.cpp ....）;; 第二个....
+
+      3. ```cpp
+         QString fileName = QFileDialog:: (
+                     this, "打开一个文件",
+                     "E:\\Desktop\\CodeLIb\\qt\\09_dialog",
+                     "PNG (*.png) ;; JPG (*.jpg) ;; C++ (*.cpp)");
+         ```
+
+
+
+### 布局
+
+静态布局：位置大小不变
+
+动态布局：点击父页面，设置垂直、水平、栅格、表单等等
+
+弹簧设置sizeType为固定
+
+各种常用控件
+
+多选按钮：
+
+1. 属性栏选项：tristate：是否使能三态（连续点击两次才算选中）
+
+**listWidget**：
+
+使用addItems添加大量列表
+
+```c++
+QStringList list;
+list << "窗前明月光" << "疑是地上霜" << "举头望明月" << "低头思故乡";
+ui->listWidget->addItems(list);
+```
+
+**treeWidget**
+
+使用方式：
+
+1. 设置标题，生成多少列
+2. 添加根节点 treeWidget->addTopLevelItem
+3. 根节点下添加字节点 item->addChild
+
+**tableWidget**
+
+1. 设置行数、列数 setRowCount setColumnCount
+
+2. 设置水平的标题 setHorizontalHeaderLabels
+
+3. 设置表格某行某列的数据
+
+   ```c++
+   setItem(cnt, 2, new QTableWidgetItem(QString::number(cnt + 18)));
+   ```
+
+
+
+**容器**
+
+stacked Widget 页面的切换需要自己实现，一般使用按钮点击的时候切换
+
+​	setCurrentIndex方式切换到第几页，序号从0开始 
+
+Frame：形式和普通没啥区别，但是可以设置显示效果
+
+
+
+**InputWidgets，输入窗口**
+
+ComboBox：下拉框
+
+FontComboBox：文字格式选择框
+
+文本编辑。。。。
+
+点击计数器。。
+
+时间编辑。。。
+
+日期编辑。。。
+
+Dial：类似滚轮调节旋钮
+
+label控件：
+
+ 1. 显示文件
+
+ 2. 显示动图等
+
+    	1. ```c++
+        QMovie *movie = new QMovie(":/down-arrow.gif", QByteArray(), this);
+        ui->label_2->setMovie(movie);
+        movie->start(); 
+        ```
+
+**自定义控件**
+
+1. 新建界面设计类
+2. 在主界面拖入自定义控件的父类
+3. 右击变更为子类控件（提升），注意名称和新建控件的类名相同
+
+**事件**
+
+例子：
+
+1. 鼠标点击，产生事件，包含：点击哪个键，坐标的信息
+2. 系统收到事件并抛出
+3. 各种处理函数 
+
+流程：
+
+1. 新建label类
+2. ui中提升label
+3. 重写鼠标事件函数
+4. 获取事件信息
+
+发生某个事件时，事件会到达窗口的event函数，
+
+若返回true，表示该事件的到处理，如果是false，事件会继续传递到父窗口
+
+通过判断QEvent参数类型，调用响应的处理函数
+
+
+
+若不是需要筛选的事件则调用父类的event
+
+QLabel::event(e);
+
+**事件过滤器**
+
+。。。。。。
+
+
+
+**定时器事件**
+
+```c++
+void Widget::timerEvent(QTimerEvent *event)
+{
+    static int num1;
+    static int num2;
+    if(event->timerId()==this->mTimeId1) {
+        num1++;
+        ui->lcdNumber->display(num1);
+    }
+    if(event->timerId()==this->mTimeId2) {
+        num2++;
+        ui->lcdNumber_2->display(num2);
+    }
+
+}
+
+
+void Widget::on_pushButton_clicked()
+{
+    // 先释放
+    if(!this->mTimeId1) {
+        killTimer(this->mTimeId1);
+    }
+    this->mTimeId1 = startTimer(1000);
+}
+
+
+void Widget::on_pushButton_2_clicked()
+{
+    // 停止定时器
+    killTimer(this->mTimeId1);
+}
+
+
+void Widget::on_pushButton_3_clicked()
+{
+    // 先释放
+    if(!this->mTimeId2) {
+        killTimer(this->mTimeId2);
+    }
+    this->mTimeId2 = startTimer(100);
+
+}
+
+
+void Widget::on_pushButton_4_clicked()
+{
+    killTimer(this->mTimeId2);
+}
+```
+
+**另一种定时器，分装好的**
+
+ClientCharacteristicConfiguration
+
